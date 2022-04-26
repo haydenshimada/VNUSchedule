@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <meta name = "viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <title>VNUSchedule</title>
+        <link rel="icon" href="{{ url_for('static', filename='image/icon.png') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/index.css') }}">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <section id="header">
+            <div class="imageHeader">
+                <img src="{{ url_for('static', filename='image/logo.png') }}" alt="">
+            </div>
+            <div class="h1Header">
+                <h1>Cổng thông tin đào tạo Đại học</h1>
+            </div>
+        </section>
+        
+        <section id="content">
+            <div class="imgBox">
+                <img src="{{ url_for('static', filename='image/vnu.jpeg') }}" alt="">
+            </div>
+            <div class="contentBox">
+                <div class="formBox">
+                        <div class="formHeader">
+                            <h2>Đăng nhập</h2>
+                        </div>
+<!--                        <form class="login_form" name="form" onsubmit="return validated()" method="post" action="schedule.html">-->
+                        <form class="login_form" name="form" onsubmit="return validated()" method="post">
+                            <div class="inputBox">
+                                <span>Tên đăng nhập</span>
+                                <label>
+                                    <input type="text" name="username">
+                                </label>
+                                <p id="user_error">Xin hãy điền Tên đăng nhập</p>
+                            </div>
+                            <div class="inputBox">
+                                <span>Mật khẩu</span>
+                                <label>
+                                    <input type="password" name="password">
+                                </label>
+                                <p id="pass_error">Xin hãy điền Mật khẩu</p>
+                            </div>
+                            <p id="login_failed">Sai truy cập hoặc mật khẩu. Vui lòng nhập lại!</p>
+                            <div class="inputBox">
+                                <div id="checkLogin" style="display: block">{{ x }}</div>
+                                <button type="submit">Đăng nhập</button>
+                            </div>
+                        </form>
+                </div>
+            </div>
+        </section>
+    </body>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='javascript/index.js') }}"></script>
+</html>
