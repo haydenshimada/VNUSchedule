@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas
-import ExcelExport
 
 # Kiểm tra tình trạng link url
 # url: Link trang web muốn kiểm tra, kiểm tra được mọi trang web
@@ -62,6 +61,7 @@ def table_extract(html_text):
     for i in range(len(table.index) - 1):
         time = table.iloc[i, 8]
         time = time.split(" - ", 2)
+        from api import ExcelExport
         subject = ExcelExport.Subject(table.iloc[i, 2], table.iloc[i, 6], table.iloc[i, 7], int(time[0]), int(time[1]),
                                       table.iloc[i, 9])
         subject_list.append(subject)

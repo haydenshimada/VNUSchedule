@@ -20,7 +20,7 @@
                 <h1>Cổng thông tin đào tạo Đại học</h1>
             </div>
         </section>
-        
+
         <section id="content">
             <div class="imgBox">
                 <img src="{{ url_for('static', filename='image/vnu.jpeg') }}" alt="">
@@ -46,7 +46,7 @@
                                 </label>
                                 <p id="pass_error">Xin hãy điền Mật khẩu</p>
                             </div>
-                            <p id="login_failed">Sai truy cập hoặc mật khẩu. Vui lòng nhập lại!</p>
+                            <p id="login_failed" style="display: block">Sai truy cập hoặc mật khẩu. Vui lòng nhập lại!</p>
                             <div class="inputBox">
                                 <button type="submit">Đăng nhập</button>
                             </div>
@@ -55,6 +55,6 @@
             </div>
         </section>
     </body>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
     <script src="{{ url_for('static', filename='javascript/index.js') }}"></script>
 </html>

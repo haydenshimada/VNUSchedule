@@ -1,6 +1,5 @@
-import json
-from flask import request
-from flask import Flask, render_template, jsonify
+from flask import request, redirect, url_for
+from flask import Flask, render_template
 
 
 application = Flask(__name__)
@@ -11,15 +10,23 @@ def index():
     return render_template("index.html")
 
 
-@application.route("/checkLogin", methods=["POST"])
+@application.route("/loginFailed", methods=["POST", "GET"])
 def check_login():
-    output = request.get_json()
-    user_and_pass = json.loads(output)
+    output = request.form.to_dict()
+    print(output)
 
     from api.LoginExtract import login
-    _, is_login = login(user_and_pass["user"], user_and_pass["pass"])
+    _, is_login = login(output["username"], output["password"])
 
-    return jsonify('', render_template("checkLogin.html", x=str(is_login)))
+    if is_login:
+        return redirect(url_for('login_successfully'))
+    else:
+        return render_template("loginFailed.html")
+
+
+@application.route("/timeTable", methods=["POST", "GET"])
+def login_successfully():
+    return render_template("loginSuccessfully.html")
 
 
 if __name__ == '__main__':

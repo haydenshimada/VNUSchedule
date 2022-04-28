@@ -27,18 +27,18 @@ function validated() {
         return false;
     }
 
-    const dict_values = {user, pass};
-    const s = JSON.stringify(dict_values);
-    console.log(s);
-    $.ajax({
-        url:"/checkLogin",
-        type:"post",
-        contextType: "application/json",
-        data: JSON.stringify(s),
-        success: function (data) {
-            $(checkLogin).replaceWith(data);
-        }
-    });
+    // const dict_values = {user, pass};
+    // const s = JSON.stringify(dict_values);
+    // console.log(s);
+    // $.ajax({
+    //     url:"/checkLogin",
+    //     type:"post",
+    //     contextType: "application/json",
+    //     data: JSON.stringify(s),
+    //     success: function (data) {
+    //         $(checkLogin).replaceWith(data);
+    //     }
+    // });
 
     if (document.getElementById("checkLogin").value === "False") {
         login_failed.style.display = "block";
