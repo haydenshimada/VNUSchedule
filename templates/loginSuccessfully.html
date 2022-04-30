@@ -39,8 +39,25 @@
             <h1>Cổng thông tin đào tạo Đại học</h1>
         </div>
     </section>
-    <section id="timeTable">
-    <table><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td rowspan="2">Pháp luật</td></tr><tr><td></td><td></td><td rowspan="2">Bóng chuyền 1</td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td rowspan="4">Nguyên lý hệ điều hành</td><td></td><td rowspan="3">Công nghệ phần mềm</td><td></td><td></td><td rowspan="2">Kinh tế</td></tr><tr><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td rowspan="3">Trí tuệ nhân tạo</td><td></td><td rowspan="3">Mạng máy tính</td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr></table> </section>
+    <button id="convert2Img">Save as PNG</button>
+    <section>
+        <div id="timeTable">
+    <table><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td rowspan="2">Pháp luật</td></tr><tr><td></td><td></td><td rowspan="2">Bóng chuyền 1</td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td rowspan="4">Nguyên lý hệ điều hành</td><td></td><td rowspan="3">Công nghệ phần mềm</td><td></td><td></td><td rowspan="2">Kinh tế</td></tr><tr><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td rowspan="3">Trí tuệ nhân tạo</td><td></td><td rowspan="3">Mạng máy tính</td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr></table> </div> </section>
+    
+    <script src="{{ url_for('static', filename='javascript/html2canvas.min.js') }}"></script>
+    <script>
+        document.getElementById("convert2Img").onclick = function () {
+            const screenshotTarget = document.getElementById("timeTable");
+            html2canvas(screenshotTarget).then((canvas) => {
+                const base64Image = canvas.toDataURL("image/png");
+                const anchor = document.createElement("a");
+                anchor.setAttribute("href", base64Image);
+                anchor.setAttribute("download", "Time Table.png");
+                anchor.click();
+                anchor.remove();
+            });
+        };
+    </script>
     </body>
 </html>
     

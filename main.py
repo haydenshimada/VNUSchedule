@@ -65,7 +65,9 @@ def login_successfully():
             <h1>Cổng thông tin đào tạo Đại học</h1>
         </div>
     </section>
-    <section id="timeTable">
+    <button id="convert2Img">Save as PNG</button>
+    <section>
+        <div id="timeTable">
     '''
 
     content = "<table>"
@@ -96,19 +98,33 @@ def login_successfully():
                     while (check_below < len(time_table_matrix)) and (time_table_matrix[check_below][j] == subject):
                         is_fill[check_below][j] = True
                         check_below += 1
-                    content += "<td rowspan=\"{size}\">{subject}</td>".format(size=check_below - i, subject=subject)
+                    content += '<td rowspan="{size}">{subject}</td>'.format(size=check_below - i, subject=subject)
                     is_fill[i][j] = True
                 else:
                     content += '<td></td>'
                     is_fill[i][j] = True
         content += "</tr>"
-    content += "</table> </section>"
+    content += "</table> </div> </section>"
     header += content
     header += '''
+    
+    <script src="{{ url_for('static', filename='javascript/html2canvas.min.js') }}"></script>
+    <script>
+        document.getElementById("convert2Img").onclick = function () {
+            const screenshotTarget = document.getElementById("timeTable");
+            html2canvas(screenshotTarget).then((canvas) => {
+                const base64Image = canvas.toDataURL("image/png");
+                var anchor = document.createElement("a");
+                anchor.setAttribute("href", base64Image);
+                anchor.setAttribute("download", "Time Table.png");
+                anchor.click();
+                anchor.remove();
+            });
+        };
+    </script>
     </body>
 </html>
     '''
-    print(header)
 
     file = open("templates/loginSuccessfully.html", "w", encoding="utf-8")
     file.write(header)
