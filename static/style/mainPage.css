@@ -1,0 +1,91 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#header {
+    height: 80px;
+    background: #fff;
+}
+
+#header .imageHeader {
+    vertical-align: top;
+    display: inline-block;
+}
+
+#header .imageHeader img {
+    width: 75%;
+    height: auto;
+}
+
+#header .h1Header {
+    display: inline-block;
+}
+
+#header .h1Header h1 {
+    padding-top: 8%;
+    font-family: 'Times New Roman', Times, serif;
+    color: #007F49;
+    font-size: 25px;
+    text-transform: uppercase;
+}
+
+#timeTable {
+    margin-top: 20px;
+    align-items: center;
+}
+
+table {
+    margin-top: 60px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table, tr, td, th {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.sequenceNumber {
+    width: 35px;
+    background-color: #FFFF71;
+}
+
+.timePeriod {
+    width: 110px;
+    background-color: #85DFFF;
+}
+
+td {
+    width: 200px;
+    height: 40px;
+    text-align: center;
+}
+
+#tableHeader {
+    background-color: #FF8181;
+    height: 30px;
+}
+
+#convert2Img {
+    background-color: white;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    width: 150px;
+    height: 40.4px;
+    color: black;
+    outline: none;
+    border: 2.5px solid #007F49;
+    border-radius: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    float: right;
+    margin-right: 50px;
+}
+
+#convert2Img:hover {
+    background: #007F49;
+    color: white;
+    transition: 0.5s;
+}

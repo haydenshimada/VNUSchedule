@@ -32,29 +32,8 @@ def login_successfully():
     <meta charset="utf-8">
     <title>VNUSchedule</title>
     <link rel="icon" href="{{ url_for('static', filename='image/icon.png') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/index.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/mainPage.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <style>
-        #timeTable {
-            margin-top: 20px;
-            align-items: center;
-        }
-            
-        table {
-            margin-left: auto; 
-            margin-right: auto;
-        }
-        
-        table, tr, td {
-            border: 1px solid black;
-        }
-
-        td {
-            width: 16.6%;
-            height: 50px;
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
     <section id="header">
@@ -70,16 +49,28 @@ def login_successfully():
         <div id="timeTable">
     '''
 
-    content = "<table>"
+    content = '''
+            <table>
+                <tr id="tableHeader">
+                <th id="sequenceNumber">Tiết</th>
+                <th id="timePeriod">Thời gian học</th>
+                <th>Thứ 2</th>
+                <th>Thứ 3</th>
+                <th>Thứ 4</th>
+                <th>Thứ 5</th>
+                <th>Thứ 6</th>
+                <th>Thứ 7</th>
+            </tr>
+    '''
 
     time_table_matrix = [["", "", "", "", "", ""],
-                         ["", "", "", "", "", "Pháp luật"],
-                         ["", "", "Bóng chuyền 1", "", "", "Pháp luật"],
+                         ["", "", "", "", "", "Pháp luật và đạo đức nghề nghiệp trong CNTT"],
+                         ["", "", "Bóng chuyền 1", "", "", "Pháp luật và đạo đức nghề nghiệp trong CNTT"],
                          ["", "", "Bóng chuyền 1", "", "", ""],
                          ["", "", "", "", "", ""],
                          ["", "", "", "", "", ""],
-                         ["Nguyên lý hệ điều hành", "", "Công nghệ phần mềm", "", "", "Kinh tế"],
-                         ["Nguyên lý hệ điều hành", "", "Công nghệ phần mềm", "", "", "Kinh tế"],
+                         ["Nguyên lý hệ điều hành", "", "Công nghệ phần mềm", "", "", "Kinh tế chính trị Mác-Lênin"],
+                         ["Nguyên lý hệ điều hành", "", "Công nghệ phần mềm", "", "", "Kinh tế chính trị Mác-Lênin"],
                          ["Nguyên lý hệ điều hành", "", "Công nghệ phần mềm", "", "", ""],
                          ["Nguyên lý hệ điều hành", "", "Trí tuệ nhân tạo", "", "Mạng máy tính", ""],
                          ["", "", "Trí tuệ nhân tạo", "", "Mạng máy tính", ""],
@@ -88,7 +79,11 @@ def login_successfully():
 
     subject_list = []
     for i in range(len(time_table_matrix)):
-        content += "<tr>"
+        content += '''
+            <tr>
+                <td class="sequenceNumber">{no}</td>
+                <td class="timePeriod">{hour}h - {hour}h50</td>
+        '''.format(no=i+1, hour=i+7)
         for j in range(len(time_table_matrix[i])):
             subject = time_table_matrix[i][j]
             if not is_fill[i][j]:

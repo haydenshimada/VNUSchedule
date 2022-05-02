@@ -6,29 +6,8 @@
     <meta charset="utf-8">
     <title>VNUSchedule</title>
     <link rel="icon" href="{{ url_for('static', filename='image/icon.png') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/index.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/mainPage.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <style>
-        #timeTable {
-            margin-top: 20px;
-            align-items: center;
-        }
-            
-        table {
-            margin-left: auto; 
-            margin-right: auto;
-        }
-        
-        table, tr, td {
-            border: 1px solid black;
-        }
-
-        td {
-            width: 16.6%;
-            height: 50px;
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
     <section id="header">
@@ -42,7 +21,67 @@
     <button id="convert2Img">Save as PNG</button>
     <section>
         <div id="timeTable">
-    <table><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td rowspan="2">Pháp luật</td></tr><tr><td></td><td></td><td rowspan="2">Bóng chuyền 1</td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td rowspan="4">Nguyên lý hệ điều hành</td><td></td><td rowspan="3">Công nghệ phần mềm</td><td></td><td></td><td rowspan="2">Kinh tế</td></tr><tr><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td rowspan="3">Trí tuệ nhân tạo</td><td></td><td rowspan="3">Mạng máy tính</td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr></table> </div> </section>
+    
+            <table>
+                <tr id="tableHeader">
+                <th id="sequenceNumber">Tiết</th>
+                <th id="timePeriod">Thời gian học</th>
+                <th>Thứ 2</th>
+                <th>Thứ 3</th>
+                <th>Thứ 4</th>
+                <th>Thứ 5</th>
+                <th>Thứ 6</th>
+                <th>Thứ 7</th>
+            </tr>
+    
+            <tr>
+                <td class="sequenceNumber">1</td>
+                <td class="timePeriod">7h - 7h50</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td class="sequenceNumber">2</td>
+                <td class="timePeriod">8h - 8h50</td>
+        <td></td><td></td><td></td><td></td><td></td><td rowspan="2">Pháp luật và đạo đức nghề nghiệp trong CNTT</td></tr>
+            <tr>
+                <td class="sequenceNumber">3</td>
+                <td class="timePeriod">9h - 9h50</td>
+        <td></td><td></td><td rowspan="2">Bóng chuyền 1</td><td></td><td></td></tr>
+            <tr>
+                <td class="sequenceNumber">4</td>
+                <td class="timePeriod">10h - 10h50</td>
+        <td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td class="sequenceNumber">5</td>
+                <td class="timePeriod">11h - 11h50</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td class="sequenceNumber">6</td>
+                <td class="timePeriod">12h - 12h50</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td class="sequenceNumber">7</td>
+                <td class="timePeriod">13h - 13h50</td>
+        <td rowspan="4">Nguyên lý hệ điều hành</td><td></td><td rowspan="3">Công nghệ phần mềm</td><td></td><td></td><td rowspan="2">Kinh tế chính trị Mác-Lênin</td></tr>
+            <tr>
+                <td class="sequenceNumber">8</td>
+                <td class="timePeriod">14h - 14h50</td>
+        <td></td><td></td><td></td></tr>
+            <tr>
+                <td class="sequenceNumber">9</td>
+                <td class="timePeriod">15h - 15h50</td>
+        <td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td class="sequenceNumber">10</td>
+                <td class="timePeriod">16h - 16h50</td>
+        <td></td><td rowspan="3">Trí tuệ nhân tạo</td><td></td><td rowspan="3">Mạng máy tính</td><td></td></tr>
+            <tr>
+                <td class="sequenceNumber">11</td>
+                <td class="timePeriod">17h - 17h50</td>
+        <td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td class="sequenceNumber">12</td>
+                <td class="timePeriod">18h - 18h50</td>
+        <td></td><td></td><td></td><td></td></tr></table> </div> </section>
     
     <script src="{{ url_for('static', filename='javascript/html2canvas.min.js') }}"></script>
     <script>
@@ -50,7 +89,7 @@
             const screenshotTarget = document.getElementById("timeTable");
             html2canvas(screenshotTarget).then((canvas) => {
                 const base64Image = canvas.toDataURL("image/png");
-                const anchor = document.createElement("a");
+                var anchor = document.createElement("a");
                 anchor.setAttribute("href", base64Image);
                 anchor.setAttribute("download", "Time Table.png");
                 anchor.click();
