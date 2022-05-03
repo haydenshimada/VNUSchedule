@@ -1,5 +1,6 @@
 from flask import request, redirect, url_for
 from flask import Flask, render_template
+from api.gg_api import create_calendar
 
 application = Flask(__name__)
 
@@ -22,12 +23,31 @@ def check_login():
         return render_template("loginFailed.html")
 
 
+@application.route('/create_calendar_in_background')
+def create_calendar_in_background():
+    create_calendar()
+    return ("nothing")
+
+
 @application.route("/timeTable", methods=["POST", "GET"])
 def login_successfully():
     header = '''
     <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type=text/javascript>
+        $(function() {
+          $('#convert2Cal').on('click', function(e) {
+            e.preventDefault()
+            $.getJSON('/create_calendar_in_background',
+                function(data) {
+              //do nothing
+            });
+            return false;
+          });
+        });
+</script>
     <meta name = "viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>VNUSchedule</title>
@@ -45,6 +65,7 @@ def login_successfully():
         </div>
     </section>
     <button id="convert2Img">Save as PNG</button>
+    <button id="convert2Cal">Save to Google Calendar</button>
     <section>
         <div id="timeTable">
     '''

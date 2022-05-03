@@ -89,3 +89,25 @@ td {
     color: white;
     transition: 0.5s;
 }
+
+#convert2Cal {
+    background-color: white;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    width: 200px;
+    height: 40.4px;
+    color: black;
+    outline: none;
+    border: 2.5px solid #007F49;
+    border-radius: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    float: right;
+    margin-right: 50px;
+}
+
+#convert2Cal:hover {
+    background: #007F49;
+    color: white;
+    transition: 0.5s;
+}
