@@ -10,7 +10,6 @@ from api import ExcelExport
 # trả về kèm theo một string là lỗi gặp phải là gì khi web ko ổn
 
 
-
 def is_link_ok(url):
     r = requests.head(url)
     if 200 <= r.status_code < 400:

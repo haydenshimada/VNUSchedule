@@ -15,10 +15,11 @@ data = []
 def index():
     return render_template("index.html")
 
+
 @application.route('/create_calendar_in_background')
 def create_calendar_in_background():
     create_calendar()
-    return ("nothing")
+    return "nothing"
 
 
 @application.route("/loginFailed", methods=["POST", "GET"])
