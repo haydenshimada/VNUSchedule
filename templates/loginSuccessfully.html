@@ -2,6 +2,19 @@
     <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type=text/javascript>
+        $(function() {
+          $('#convert2Cal').on('click', function(e) {
+            e.preventDefault()
+            $.getJSON('/create_calendar_in_background',
+                function(data) {
+              //do nothing
+            });
+            return false;
+          });
+        });
+</script>
     <meta name = "viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>VNUSchedule</title>
@@ -19,6 +32,7 @@
         </div>
     </section>
     <button id="convert2Img">Save as PNG</button>
+    <button id="convert2Cal">Save to Google Calendar</button>
     <section>
         <div id="timeTable">
     
