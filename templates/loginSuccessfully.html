@@ -31,7 +31,7 @@
             <h1>Cổng thông tin đào tạo Đại học</h1>
         </div>
     </section>
-    <button id="convert2Img">Save as PNG</button>
+    <button id="convert2Img" onclick="downloadTimeTable()">Save as PNG</button>
     <button id="convert2Cal">Save to Google Calendar</button>
     <section>
         <div id="timeTable">
@@ -55,11 +55,15 @@
             <tr>
                 <td class="sequenceNumber">2</td>
                 <td class="timePeriod">8h - 8h50</td>
-        <td></td><td></td><td></td><td></td><td></td><td rowspan="2">Pháp luật và đạo đức nghề nghiệp trong CNTT</td></tr>
+        <td></td><td></td><td></td><td></td><td></td><td rowspan="2">Pháp luật và đạo đức nghề nghiệp trong CNTT
+INT3514 20
+308-G2</td></tr>
             <tr>
                 <td class="sequenceNumber">3</td>
                 <td class="timePeriod">9h - 9h50</td>
-        <td></td><td></td><td rowspan="2">Bóng chuyền 1</td><td></td><td></td></tr>
+        <td></td><td></td><td rowspan="2">Bóng chuyền 1
+PES1015 6
+Sân bãi ĐHNN</td><td></td><td></td></tr>
             <tr>
                 <td class="sequenceNumber">4</td>
                 <td class="timePeriod">10h - 10h50</td>
@@ -75,7 +79,13 @@
             <tr>
                 <td class="sequenceNumber">7</td>
                 <td class="timePeriod">13h - 13h50</td>
-        <td rowspan="4">Nguyên lý hệ điều hành</td><td></td><td rowspan="3">Công nghệ phần mềm</td><td></td><td></td><td rowspan="2">Kinh tế chính trị Mác-Lênin</td></tr>
+        <td rowspan="4">Nguyên lý hệ điều hành
+INT2214 20
+206-GĐ3</td><td></td><td rowspan="3">Công nghệ phần mềm
+INT2208E 21
+208-GĐ3</td><td></td><td></td><td rowspan="2">Kinh tế chính trị Mác - Lênin
+PEC1008 23
+206-GĐ3</td></tr>
             <tr>
                 <td class="sequenceNumber">8</td>
                 <td class="timePeriod">14h - 14h50</td>
@@ -87,7 +97,11 @@
             <tr>
                 <td class="sequenceNumber">10</td>
                 <td class="timePeriod">16h - 16h50</td>
-        <td></td><td rowspan="3">Trí tuệ nhân tạo</td><td></td><td rowspan="3">Mạng máy tính</td><td></td></tr>
+        <td></td><td rowspan="3">Trí tuệ nhân tạo
+INT3401E 22
+208-GĐ3</td><td></td><td rowspan="3">Mạng máy tính
+INT2213 22
+PM 307-G2</td><td></td></tr>
             <tr>
                 <td class="sequenceNumber">11</td>
                 <td class="timePeriod">17h - 17h50</td>
@@ -95,9 +109,19 @@
             <tr>
                 <td class="sequenceNumber">12</td>
                 <td class="timePeriod">18h - 18h50</td>
-        <td></td><td></td><td></td><td></td></tr></table> </div> </section>
+        <td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td class="sequenceNumber">13</td>
+                <td class="timePeriod">19h - 19h50</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td class="sequenceNumber">14</td>
+                <td class="timePeriod">20h - 20h50</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td></tr></table> </div> </section>
     
-    <script src="{{ url_for('static', filename='javascript/html2canvas.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
     <script src="{{ url_for('static', filename='javascript/mainPage.js') }}"></script>
     </body>
 </html>

@@ -1,8 +1,13 @@
+import csv
+
 from flask import request, redirect, url_for
 from flask import Flask, render_template
-from api.gg_api import create_calendar
+import numpy as np
 
 application = Flask(__name__)
+
+
+data = []
 
 
 @application.route("/")
@@ -15,18 +20,18 @@ def check_login():
     output = request.form.to_dict()
 
     from api.LoginExtract import login
-    _, is_login = login(output["username"], output["password"])
+    global data
+    data, is_login = login(output["username"], output["password"])
+
+    # data = np.matrix(data)
+    # with open('sample.csv', 'w') as f:
+    #     mywriter = csv.writer(f, delimiter=',')
+    #     mywriter.writerows(data)
 
     if is_login:
         return redirect(url_for('login_successfully'))
     else:
         return render_template("loginFailed.html")
-
-
-@application.route('/create_calendar_in_background')
-def create_calendar_in_background():
-    create_calendar()
-    return ("nothing")
 
 
 @application.route("/timeTable", methods=["POST", "GET"])
@@ -35,19 +40,6 @@ def login_successfully():
     <!DOCTYPE html>
 <html lang="en">
 <head>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type=text/javascript>
-        $(function() {
-          $('#convert2Cal').on('click', function(e) {
-            e.preventDefault()
-            $.getJSON('/create_calendar_in_background',
-                function(data) {
-              //do nothing
-            });
-            return false;
-          });
-        });
-</script>
     <meta name = "viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>VNUSchedule</title>
@@ -64,8 +56,7 @@ def login_successfully():
             <h1>Cổng thông tin đào tạo Đại học</h1>
         </div>
     </section>
-    <button id="convert2Img">Save as PNG</button>
-    <button id="convert2Cal">Save to Google Calendar</button>
+    <button id="convert2Img" onclick="downloadTimeTable()">Save as PNG</button>
     <section>
         <div id="timeTable">
     '''
@@ -84,18 +75,23 @@ def login_successfully():
             </tr>
     '''
 
-    time_table_matrix = [["", "", "", "", "", ""],
-                         ["", "", "", "", "", "Pháp luật và đạo đức nghề nghiệp trong CNTT"],
-                         ["", "", "Bóng chuyền 1", "", "", "Pháp luật và đạo đức nghề nghiệp trong CNTT"],
-                         ["", "", "Bóng chuyền 1", "", "", ""],
-                         ["", "", "", "", "", ""],
-                         ["", "", "", "", "", ""],
-                         ["Nguyên lý hệ điều hành", "", "Công nghệ phần mềm", "", "", "Kinh tế chính trị Mác-Lênin"],
-                         ["Nguyên lý hệ điều hành", "", "Công nghệ phần mềm", "", "", "Kinh tế chính trị Mác-Lênin"],
-                         ["Nguyên lý hệ điều hành", "", "Công nghệ phần mềm", "", "", ""],
-                         ["Nguyên lý hệ điều hành", "", "Trí tuệ nhân tạo", "", "Mạng máy tính", ""],
-                         ["", "", "Trí tuệ nhân tạo", "", "Mạng máy tính", ""],
-                         ["", "", "Trí tuệ nhân tạo", "", "Mạng máy tính", ""]]
+    # time_table_matrix = [["", "", "", "", "", ""],
+    #                      ["", "", "", "", "", "Pháp luật và đạo đức nghề nghiệp trong CNTT"],
+    #                      ["", "", "Bóng chuyền 1", "", "", "Pháp luật và đạo đức nghề nghiệp trong CNTT"],
+    #                      ["", "", "Bóng chuyền 1", "", "", ""],
+    #                      ["", "", "", "", "", ""],
+    #                      ["", "", "", "", "", ""],
+    #                      ["Nguyên lý hệ điều hành", "", "Công nghệ phần mềm", "", "", "Kinh tế chính trị Mác-Lênin"],
+    #                      ["Nguyên lý hệ điều hành", "", "Công nghệ phần mềm", "", "", "Kinh tế chính trị Mác-Lênin"],
+    #                      ["Nguyên lý hệ điều hành", "", "Công nghệ phần mềm", "", "", ""],
+    #                      ["Nguyên lý hệ điều hành", "", "Trí tuệ nhân tạo", "", "Mạng máy tính", ""],
+    #                      ["", "", "Trí tuệ nhân tạo", "", "Mạng máy tính", ""],
+    #                      ["", "", "Trí tuệ nhân tạo", "", "Mạng máy tính", ""]]
+
+    from api import ExcelExport
+    from api.LoginExtract import table_extract
+    time_table_matrix = ExcelExport.html_table(table_extract(data))
+
     is_fill = [([False] * len(time_table_matrix[0])) for _ in range(len(time_table_matrix))]
 
     subject_list = []
@@ -124,7 +120,9 @@ def login_successfully():
     header += content
     header += '''
     
-    <script src="{{ url_for('static', filename='javascript/html2canvas.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
     <script src="{{ url_for('static', filename='javascript/mainPage.js') }}"></script>
     </body>
 </html>
