@@ -19,7 +19,10 @@
         </div>
     </section>
     <button id="convert2Img" onclick="downloadTimeTable()">Save as PNG</button>
-    <button id="convert2Cal">Save to Google Calendar</button>
+    
+    <form action="/authorize" method="post">
+        <button type="submit" id="convert2Cal">Save to Google Calendar </button>
+    </form>
     <section>
         <div id="timeTable">
     
@@ -42,61 +45,57 @@
             <tr>
                 <td class="sequenceNumber">2</td>
                 <td class="timePeriod">8h - 8h50</td>
-        <td></td><td></td><td></td><td></td><td></td><td rowspan="2">Pháp luật và đạo đức nghề nghiệp trong CNTT
-INT3514 20
-308-G2</td></tr>
+        <td></td><td></td><td></td><td></td><td></td><td></td></tr>
             <tr>
                 <td class="sequenceNumber">3</td>
                 <td class="timePeriod">9h - 9h50</td>
-        <td></td><td></td><td rowspan="2">Bóng chuyền 1
-PES1015 6
-Sân bãi ĐHNN</td><td></td><td></td></tr>
+        <td></td><td></td><td></td><td></td><td></td><td></td></tr>
             <tr>
                 <td class="sequenceNumber">4</td>
                 <td class="timePeriod">10h - 10h50</td>
-        <td></td><td></td><td></td><td></td><td></td></tr>
+        <td></td><td rowspan="3">Mạng máy tính
+INT2213 24
+PM 313-G2</td><td></td><td></td><td></td><td></td></tr>
             <tr>
                 <td class="sequenceNumber">5</td>
                 <td class="timePeriod">11h - 11h50</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <td></td><td></td><td></td><td></td><td></td></tr>
             <tr>
                 <td class="sequenceNumber">6</td>
                 <td class="timePeriod">12h - 12h50</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <td></td><td></td><td></td><td></td><td></td></tr>
             <tr>
                 <td class="sequenceNumber">7</td>
                 <td class="timePeriod">13h - 13h50</td>
-        <td rowspan="4">Nguyên lý hệ điều hành
-INT2214 20
-206-GĐ3</td><td></td><td rowspan="3">Công nghệ phần mềm
+        <td></td><td></td><td rowspan="3">Công nghệ phần mềm
 INT2208E 21
-208-GĐ3</td><td></td><td></td><td rowspan="2">Kinh tế chính trị Mác - Lênin
-PEC1008 23
-206-GĐ3</td></tr>
+208-GĐ3</td><td></td><td></td><td rowspan="3">Trí tuệ nhân tạo
+INT3401E 24
+308-GĐ2</td></tr>
             <tr>
                 <td class="sequenceNumber">8</td>
                 <td class="timePeriod">14h - 14h50</td>
-        <td></td><td></td><td></td></tr>
+        <td></td><td></td><td></td><td></td></tr>
             <tr>
                 <td class="sequenceNumber">9</td>
                 <td class="timePeriod">15h - 15h50</td>
-        <td></td><td></td><td></td><td></td></tr>
+        <td></td><td rowspan="2">Cơ sở dữ liệu
+INT2211 20
+PM 207-G2</td><td></td><td rowspan="2">Kinh tế chính trị Mác - Lênin
+PEC1008 25
+211-GĐ3</td></tr>
             <tr>
                 <td class="sequenceNumber">10</td>
                 <td class="timePeriod">16h - 16h50</td>
-        <td></td><td rowspan="3">Trí tuệ nhân tạo
-INT3401E 22
-208-GĐ3</td><td></td><td rowspan="3">Mạng máy tính
-INT2213 22
-PM 307-G2</td><td></td></tr>
+        <td></td><td></td><td></td><td></td></tr>
             <tr>
                 <td class="sequenceNumber">11</td>
                 <td class="timePeriod">17h - 17h50</td>
-        <td></td><td></td><td></td><td></td></tr>
+        <td></td><td></td><td></td><td></td><td></td><td></td></tr>
             <tr>
                 <td class="sequenceNumber">12</td>
                 <td class="timePeriod">18h - 18h50</td>
-        <td></td><td></td><td></td><td></td></tr>
+        <td></td><td></td><td></td><td></td><td></td><td></td></tr>
             <tr>
                 <td class="sequenceNumber">13</td>
                 <td class="timePeriod">19h - 19h50</td>
@@ -110,19 +109,19 @@ PM 307-G2</td><td></td></tr>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
     <script src="{{ url_for('static', filename='javascript/mainPage.js') }}"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script type=text/javascript>
-        $(function() {
-          $('#convert2Cal').on('click', function(e) {
-            e.preventDefault()
-            $.getJSON('/create_calendar_in_background',
-                function(data) {
-              //do nothing
-            });
-            return false;
-          });
-        });
-    </script>
+    # <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    # <script type=text/javascript>
+    #     $(function() {
+    #       $('#convert2Cal').on('click', function(e) {
+    #         e.preventDefault()
+    #         $.getJSON('/create_calendar_in_background',
+    #             function(data) {
+    #           //do nothing
+    #         });
+    #         return false;
+    #       });
+    #     });
+    # </script>
     </body>
 </html>
     

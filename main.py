@@ -1,12 +1,18 @@
-import csv
+import os
+import flask
+from api.gg_api import event_body
+
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
+import googleapiclient.discovery
 
 from flask import request, redirect, url_for
 from flask import Flask, render_template
-from api.gg_api import create_calendar
-import numpy as np
+import flask
 
 application = Flask(__name__)
-
+# Set the secret key to some random bytes. Keep this really secret!
+application.secret_key = b'_5#y2L"F4Q871-rl38fuz\n\xec]/'
 
 data = []
 
@@ -14,12 +20,6 @@ data = []
 @application.route("/")
 def index():
     return render_template("index.html")
-
-
-@application.route('/create_calendar_in_background')
-def create_calendar_in_background():
-    create_calendar()
-    return "nothing"
 
 
 @application.route("/loginFailed", methods=["POST", "GET"])
@@ -40,6 +40,96 @@ def check_login():
     else:
         return render_template("loginFailed.html")
 
+
+# This variable specifies the name of a file that contains the OAuth 2.0
+# information for this application, including its client_id and client_secret.
+CLIENT_SECRETS_FILE = "api/credentials.json"
+
+# This OAuth 2.0 access scope allows for full read/write access to the
+# authenticated user's account and requires requests to use an SSL connection.
+SCOPES = ['https://www.googleapis.com/auth/calendar']
+API_SERVICE_NAME = 'calendar'
+API_VERSION = 'v3'
+
+
+@application.route('/create_calendar_in_background', methods=['GET', 'POST'])
+def create_calendar_in_background():
+  if 'credentials' not in flask.session:
+    return flask.redirect('authorize')
+
+  # Load credentials from the session.
+  credentials = google.oauth2.credentials.Credentials(
+      **flask.session['credentials'])
+
+  service = googleapiclient.discovery.build(
+      API_SERVICE_NAME, API_VERSION, credentials=credentials)
+
+  event = service.events().insert(calendarId='primary', body=event_body).execute()
+
+  # Save credentials back to session in case access token was refreshed.
+  # ACTION ITEM: In a production app, you likely want to save these
+  #              credentials in a persistent database instead.
+  flask.session['credentials'] = credentials_to_dict(credentials)
+
+  return flask.redirect(flask.url_for('index'))
+
+
+@application.route('/authorize', methods=['GET', 'POST'])
+def authorize():
+  # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
+  flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+      CLIENT_SECRETS_FILE, scopes=SCOPES)
+
+  # The URI created here must exactly match one of the authorized redirect URIs
+  # for the OAuth 2.0 client, which you configured in the API Console. If this
+  # value doesn't match an authorized URI, you will get a 'redirect_uri_mismatch'
+  # error.
+  flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
+
+  authorization_url, state = flow.authorization_url(
+      # Enable offline access so that you can refresh an access token without
+      # re-prompting the user for permission. Recommended for web server apps.
+      access_type='offline',
+      # Enable incremental authorization. Recommended as a best practice.
+      include_granted_scopes='true')
+
+  # Store the state so the callback can verify the auth server response.
+  flask.session['state'] = state
+
+  return flask.redirect(authorization_url)
+
+
+@application.route('/oauth2callback')
+def oauth2callback():
+  # Specify the state when creating the flow in the callback so that it can
+  # verified in the authorization server response.
+  state = flask.session['state']
+
+  flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+      CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
+  flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
+
+  # Use the authorization server's response to fetch the OAuth 2.0 tokens.
+  authorization_response = flask.request.url
+  flow.fetch_token(authorization_response=authorization_response)
+
+  # Store credentials in the session.
+  # ACTION ITEM: In a production app, you likely want to save these
+  #              credentials in a persistent database instead.
+  credentials = flow.credentials
+  flask.session['credentials'] = credentials_to_dict(credentials)
+
+  return flask.redirect(flask.url_for('create_calendar_in_background'))
+
+
+def credentials_to_dict(credentials):
+  return {'token': credentials.token,
+          'refresh_token': credentials.refresh_token,
+          'token_uri': credentials.token_uri,
+          'client_id': credentials.client_id,
+          'client_secret': credentials.client_secret,
+          'scopes': credentials.scopes}
+          
 
 @application.route("/timeTable", methods=["POST", "GET"])
 def login_successfully():
@@ -64,7 +154,10 @@ def login_successfully():
         </div>
     </section>
     <button id="convert2Img" onclick="downloadTimeTable()">Save as PNG</button>
-    <button id="convert2Cal">Save to Google Calendar</button>
+    
+    <form action="/authorize" method="post">
+        <button type="submit" id="convert2Cal">Save to Google Calendar </button>
+    </form>
     <section>
         <div id="timeTable">
     '''
@@ -132,19 +225,19 @@ def login_successfully():
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
     <script src="{{ url_for('static', filename='javascript/mainPage.js') }}"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script type=text/javascript>
-        $(function() {
-          $('#convert2Cal').on('click', function(e) {
-            e.preventDefault()
-            $.getJSON('/create_calendar_in_background',
-                function(data) {
-              //do nothing
-            });
-            return false;
-          });
-        });
-    </script>
+    # <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    # <script type=text/javascript>
+    #     $(function() {
+    #       $('#convert2Cal').on('click', function(e) {
+    #         e.preventDefault()
+    #         $.getJSON('/create_calendar_in_background',
+    #             function(data) {
+    #           //do nothing
+    #         });
+    #         return false;
+    #       });
+    #     });
+    # </script>
     </body>
 </html>
     '''
@@ -157,4 +250,12 @@ def login_successfully():
 
 
 if __name__ == '__main__':
-    application.run(debug=True)
+    # When running locally, disable OAuthlib's HTTPs verification.
+    # ACTION ITEM for developers:
+    #     When running in production *do not* leave this option enabled.
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+    os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
+
+    # application.run(debug=True)
+    application.run('localhost', 8080, debug=True)
+
