@@ -2,6 +2,7 @@ import csv
 
 from flask import request, redirect, url_for
 from flask import Flask, render_template
+from api.gg_api import create_calendar
 import numpy as np
 
 application = Flask(__name__)
@@ -13,6 +14,11 @@ data = []
 @application.route("/")
 def index():
     return render_template("index.html")
+
+@application.route('/create_calendar_in_background')
+def create_calendar_in_background():
+    create_calendar()
+    return ("nothing")
 
 
 @application.route("/loginFailed", methods=["POST", "GET"])
@@ -38,7 +44,7 @@ def check_login():
 def login_successfully():
     header = '''
     <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta name = "viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
@@ -57,6 +63,7 @@ def login_successfully():
         </div>
     </section>
     <button id="convert2Img" onclick="downloadTimeTable()">Save as PNG</button>
+    <button id="convert2Cal">Save to Google Calendar</button>
     <section>
         <div id="timeTable">
     '''
@@ -124,6 +131,19 @@ def login_successfully():
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
     <script src="{{ url_for('static', filename='javascript/mainPage.js') }}"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type=text/javascript>
+        $(function() {
+          $('#convert2Cal').on('click', function(e) {
+            e.preventDefault()
+            $.getJSON('/create_calendar_in_background',
+                function(data) {
+              //do nothing
+            });
+            return false;
+          });
+        });
+    </script>
     </body>
 </html>
     '''
