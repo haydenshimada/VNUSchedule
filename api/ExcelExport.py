@@ -20,13 +20,45 @@ class Subject:
         self.start = start
         self.end = end
         self.where = where
-        self.bg_color = "#" + ''.join([random.choice('ABCDEF0123456789') for i in range(6)])
-        self.font_color = "white"
+        self.bg_color = '#' + ''.join([random.choice('ABCDEF0123456789') for i in range(6)])
+        self.font_color = self.font_color_chose()
 
     # Hàm để trả về dữ liệu cần thiết để điền vào file excel
     # Hàm này là để dễ dàng điền các dữ liệu liên quan đến môn học vào các ô của excel
     def return_data(self):
         return self.name + "\n" + self.classCode + "\n" + self.where
+
+    def font_color_chose(self):
+        extract = self.bg_color.strip('#')
+        amount = len(extract)
+        list_rgb = list(float(int(extract[i:i + amount // 3], 16)) for i in range(0, amount, amount // 3))
+        for i in range(len(list_rgb)):
+            if list_rgb[i] <= 0.03928:
+                list_rgb[i] /= 12.92
+            else:
+                list_rgb[i] = pow(((list_rgb[i] + 0.055) / 1.055), 2.4)
+        l = 0.2126 * list_rgb[0] + 0.7152 * list_rgb[1] + 0.0722 * list_rgb[2]
+        if l > 0.179:
+            return 'black'
+        else:
+            return 'white'
+
+
+# Hàm này sẽ trả về bảng thời khóa biểu theo dạng ma trận 2D
+# Chỉ viêc truyền vào danh sách (list) các môn học là có thể
+# Tạo ra một ma trận 2D
+# Các môn học kéo dài nhiều tiết sẽ được đặt tên như nhau trong ma trận
+# hàm này sẽ trả về ma trận, không phải là trả về string
+def html_table(subject_list):
+    arr = [["" for i in range(6)] for j in range(14)]
+    for i in subject_list:
+        text_for_display = i.return_data()
+        colum = int(i.date[1]) - 2
+        row_start = i.start - 1
+        row_end = i.end
+        for j in range(row_start, row_end):
+            arr[j][colum] = text_for_display
+    return arr
 
 
 # Object xử lý việc tạo bảng excel, truyền vào tên file mong muốn
@@ -78,3 +110,9 @@ class Schedule:
         merge_format.set_font_color(subject.font_color)
         merge_format.set_bg_color(subject.bg_color)
         self.worksheet.merge_range(merge_range, cell_data, merge_format)
+
+    def insert_list_subject(self, subject_list):
+        if subject_list is None:
+            raise Exception("The subject list is empty")
+        for i in subject_list:
+            self.insert_subject(i)

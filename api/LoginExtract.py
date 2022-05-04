@@ -1,11 +1,16 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas
+from api import ExcelExport
+
 
 # Kiểm tra tình trạng link url
 # url: Link trang web muốn kiểm tra, kiểm tra được mọi trang web
 # trẩ về một biến boolean là trang web có ổn ko
 # trả về kèm theo một string là lỗi gặp phải là gì khi web ko ổn
+
+
+
 def is_link_ok(url):
     r = requests.head(url)
     if 200 <= r.status_code < 400:
@@ -41,12 +46,18 @@ def login(LoginName, Password):
                'Password': Password,
                '__RequestVerificationToken': token}
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    auth = s.post(url, data=payload, headers=headers)
+    try:
+        auth = s.post(url, data=payload, headers=headers, timeout=30)
+    except requests.Timeout as error:
+        return False, "Timeout, the website takes too long to respond"
     if not auth.text.__contains__("Chào mừng:"):
         # Exception khi sai tk hay mk
         return "Username or Password is incorrect!", False
     payload2 = {'layout': 'main'}
-    s.get('http://dangkyhoc.vnu.edu.vn/xem-va-in-ket-qua-dang-ky-hoc/1?layout=main', data=payload2)
+    try:
+        s.get('http://dangkyhoc.vnu.edu.vn/xem-va-in-ket-qua-dang-ky-hoc/1?layout=main', data=payload2, timeout=30)
+    except requests.Timeout as error:
+        return False, "Timeout, the website takes too long to respond"
     res = s.get('http://dangkyhoc.vnu.edu.vn/xuat-ket-qua-dang-ky-hoc/1')
     return res, True
 
@@ -61,7 +72,6 @@ def table_extract(html_text):
     for i in range(len(table.index) - 1):
         time = table.iloc[i, 8]
         time = time.split(" - ", 2)
-        from api import ExcelExport
         subject = ExcelExport.Subject(table.iloc[i, 2], table.iloc[i, 6], table.iloc[i, 7], int(time[0]), int(time[1]),
                                       table.iloc[i, 9])
         subject_list.append(subject)
@@ -75,18 +85,19 @@ def table_extract(html_text):
 # mọi người có đổi thay vì in ra thì nó sẽ trả về lỗi
 # nhưng mà làm như này thì sau khi nó trả về sẽ phải viết các hàm
 # kiểm tra xem đó là lỗi hay đó là data
-# def login_protocol(Username, Password):
-#     return login(Username, Password)
+def login_protocol(Username, Password):
+    if Username is None or Password is None:
+        return "Username and Password can not be empty"
+    else:
+        return login(Username, Password)
 
-    # tk = "tai_khoan"
-    # mk = "mat_khau"
-    # data, is_ok = login(tk, mk)
-    # if not is_ok:
-    #     print(data)
-    # else:
-    #     Subject_list = table_extract(data)
-    #     schedule = ExcelExport.Schedule("prototype")
-    #     schedule.create_frame_work()
-    #     for x in range(len(Subject_list)):
-    #         schedule.insert_subject(Subject_list[x])
-    #     schedule.worktable.close()
+
+# Testing zone
+tk = "tk"
+mk = "mk"
+data, is_ok = login_protocol(tk, mk)
+if not is_ok:
+    print(data)
+else:
+    Subject_list = table_extract(data)
+    print(ExcelExport.html_table(Subject_list))
