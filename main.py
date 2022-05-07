@@ -19,6 +19,11 @@ data = []
 
 @application.route("/")
 def index():
+    return redirect(url_for('login'))
+
+
+@application.route("/dang-nhap")
+def login():
     return render_template("index.html")
 
 
@@ -54,82 +59,82 @@ API_VERSION = 'v3'
 
 @application.route('/create_calendar_in_background', methods=['GET', 'POST'])
 def create_calendar_in_background():
-  if 'credentials' not in flask.session:
-    return flask.redirect('authorize')
+    if 'credentials' not in flask.session:
+        return flask.redirect('authorize')
 
-  # Load credentials from the session.
-  credentials = google.oauth2.credentials.Credentials(
-      **flask.session['credentials'])
+    # Load credentials from the session.
+    credentials = google.oauth2.credentials.Credentials(
+        **flask.session['credentials'])
 
-  service = googleapiclient.discovery.build(
-      API_SERVICE_NAME, API_VERSION, credentials=credentials)
+    service = googleapiclient.discovery.build(
+        API_SERVICE_NAME, API_VERSION, credentials=credentials)
 
-  event = service.events().insert(calendarId='primary', body=event_body).execute()
+    event = service.events().insert(calendarId='primary', body=event_body).execute()
 
-  # Save credentials back to session in case access token was refreshed.
-  # ACTION ITEM: In a production app, you likely want to save these
-  #              credentials in a persistent database instead.
-  flask.session['credentials'] = credentials_to_dict(credentials)
+    # Save credentials back to session in case access token was refreshed.
+    # ACTION ITEM: In a production app, you likely want to save these
+    #              credentials in a persistent database instead.
+    flask.session['credentials'] = credentials_to_dict(credentials)
 
-  return flask.redirect(flask.url_for('index'))
+    return flask.redirect(flask.url_for('index'))
 
 
 @application.route('/authorize', methods=['GET', 'POST'])
 def authorize():
-  # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
-  flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-      CLIENT_SECRETS_FILE, scopes=SCOPES)
+    # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+        CLIENT_SECRETS_FILE, scopes=SCOPES)
 
-  # The URI created here must exactly match one of the authorized redirect URIs
-  # for the OAuth 2.0 client, which you configured in the API Console. If this
-  # value doesn't match an authorized URI, you will get a 'redirect_uri_mismatch'
-  # error.
-  flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
+    # The URI created here must exactly match one of the authorized redirect URIs
+    # for the OAuth 2.0 client, which you configured in the API Console. If this
+    # value doesn't match an authorized URI, you will get a 'redirect_uri_mismatch'
+    # error.
+    flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
 
-  authorization_url, state = flow.authorization_url(
-      # Enable offline access so that you can refresh an access token without
-      # re-prompting the user for permission. Recommended for web server apps.
-      access_type='offline',
-      # Enable incremental authorization. Recommended as a best practice.
-      include_granted_scopes='true')
+    authorization_url, state = flow.authorization_url(
+        # Enable offline access so that you can refresh an access token without
+        # re-prompting the user for permission. Recommended for web server apps.
+        access_type='offline',
+        # Enable incremental authorization. Recommended as a best practice.
+        include_granted_scopes='true')
 
-  # Store the state so the callback can verify the auth server response.
-  flask.session['state'] = state
+    # Store the state so the callback can verify the auth server response.
+    flask.session['state'] = state
 
-  return flask.redirect(authorization_url)
+    return flask.redirect(authorization_url)
 
 
 @application.route('/oauth2callback')
 def oauth2callback():
-  # Specify the state when creating the flow in the callback so that it can
-  # verified in the authorization server response.
-  state = flask.session['state']
+    # Specify the state when creating the flow in the callback so that it can
+    # verified in the authorization server response.
+    state = flask.session['state']
 
-  flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-      CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
-  flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+        CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
+    flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
 
-  # Use the authorization server's response to fetch the OAuth 2.0 tokens.
-  authorization_response = flask.request.url
-  flow.fetch_token(authorization_response=authorization_response)
+    # Use the authorization server's response to fetch the OAuth 2.0 tokens.
+    authorization_response = flask.request.url
+    flow.fetch_token(authorization_response=authorization_response)
 
-  # Store credentials in the session.
-  # ACTION ITEM: In a production app, you likely want to save these
-  #              credentials in a persistent database instead.
-  credentials = flow.credentials
-  flask.session['credentials'] = credentials_to_dict(credentials)
+    # Store credentials in the session.
+    # ACTION ITEM: In a production app, you likely want to save these
+    #              credentials in a persistent database instead.
+    credentials = flow.credentials
+    flask.session['credentials'] = credentials_to_dict(credentials)
 
-  return flask.redirect(flask.url_for('create_calendar_in_background'))
+    return flask.redirect(flask.url_for('create_calendar_in_background'))
 
 
 def credentials_to_dict(credentials):
-  return {'token': credentials.token,
-          'refresh_token': credentials.refresh_token,
-          'token_uri': credentials.token_uri,
-          'client_id': credentials.client_id,
-          'client_secret': credentials.client_secret,
-          'scopes': credentials.scopes}
-          
+    return {'token': credentials.token,
+            'refresh_token': credentials.refresh_token,
+            'token_uri': credentials.token_uri,
+            'client_id': credentials.client_id,
+            'client_secret': credentials.client_secret,
+            'scopes': credentials.scopes}
+
 
 @application.route("/timeTable", methods=["POST", "GET"])
 def login_successfully():
@@ -152,11 +157,16 @@ def login_successfully():
         <div class="h1Header">
             <h1>Cổng thông tin đào tạo Đại học</h1>
         </div>
+        <div id="logout_button">
+            <form action="/dang-nhap">
+                <button style="float: right; margin-top: 20px; margin-right: 20px;" type="submit">Logout</button>
+            </form>
+        <div>
     </section>
-    <button id="convert2Img" onclick="downloadTimeTable()">Save as PNG</button>
+    <button id="convert2Img" onclick="downloadTimeTable()">Save as Image</button>
     
     <form action="/authorize" method="post">
-        <button type="submit" id="convert2Cal">Save to Google Calendar </button>
+        <button type="submit" id="convert2Cal">Save to<br>Google Calendar </button>
     </form>
     <section>
         <div id="timeTable">
@@ -189,6 +199,9 @@ def login_successfully():
     #                      ["", "", "Trí tuệ nhân tạo", "", "Mạng máy tính", ""],
     #                      ["", "", "Trí tuệ nhân tạo", "", "Mạng máy tính", ""]]
 
+    if not data:
+        return redirect(url_for("index"))
+
     from api import ExcelExport
     from api.LoginExtract import table_extract
     time_table_matrix = ExcelExport.html_table(table_extract(data))
@@ -201,7 +214,7 @@ def login_successfully():
             <tr>
                 <td class="sequenceNumber">{no}</td>
                 <td class="timePeriod">{hour}h - {hour}h50</td>
-        '''.format(no=i+1, hour=i+7)
+        '''.format(no=i + 1, hour=i + 7)
         for j in range(len(time_table_matrix[i])):
             subject = time_table_matrix[i][j]
             if not is_fill[i][j]:
@@ -225,8 +238,8 @@ def login_successfully():
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
     <script src="{{ url_for('static', filename='javascript/mainPage.js') }}"></script>
-    # <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    # <script type=text/javascript>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type=text/javascript>
     #     $(function() {
     #       $('#convert2Cal').on('click', function(e) {
     #         e.preventDefault()
@@ -258,4 +271,3 @@ if __name__ == '__main__':
 
     # application.run(debug=True)
     application.run('localhost', 8080, debug=True)
-
