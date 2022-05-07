@@ -157,9 +157,9 @@ def login_successfully():
         <div class="h1Header">
             <h1>Cổng thông tin đào tạo Đại học</h1>
         </div>
-        <div id="logout_button">
+        <div id="logout">
             <form action="/dang-nhap">
-                <button style="float: right; margin-top: 20px; margin-right: 20px;" type="submit">Logout</button>
+                <button type="submit" id="logout_button">Đăng xuất</button>
             </form>
         <div>
     </section>

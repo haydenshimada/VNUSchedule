@@ -92,11 +92,11 @@ def login_protocol(Username, Password):
 
 
 # Testing zone
-tk = "tk"
-mk = "mk"
-data, is_ok = login_protocol(tk, mk)
-if not is_ok:
-    print(data)
-else:
-    Subject_list = table_extract(data)
-    print(ExcelExport.html_table(Subject_list))
+# tk = "tk"
+# mk = "mk"
+# data, is_ok = login_protocol(tk, mk)
+# if not is_ok:
+#     print(data)
+# else:
+#     Subject_list = table_extract(data)
+#     print(ExcelExport.html_table(Subject_list))
