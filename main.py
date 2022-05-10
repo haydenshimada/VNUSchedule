@@ -161,7 +161,7 @@ def login_successfully():
             <form action="/dang-nhap">
                 <button type="submit" id="logout_button">Đăng xuất</button>
             </form>
-        <div>
+        </div>
     </section>
     <button id="convert2Img" onclick="downloadTimeTable()">Save as Image</button>
     
@@ -245,18 +245,18 @@ def login_successfully():
     <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
     <script src="{{ url_for('static', filename='javascript/mainPage.js') }}"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script type=text/javascript>
-    #     $(function() {
-    #       $('#convert2Cal').on('click', function(e) {
-    #         e.preventDefault()
-    #         $.getJSON('/create_calendar_in_background',
-    #             function(data) {
-    #           //do nothing
-    #         });
-    #         return false;
-    #       });
-    #     });
-    # </script>
+    <!--    <script type=text/javascript>-->
+<!--    #     $(function() {-->
+<!--    #       $('#convert2Cal').on('click', function(e) {-->
+<!--    #         e.preventDefault()-->
+<!--    #         $.getJSON('/create_calendar_in_background',-->
+<!--    #             function(data) {-->
+<!--    #           //do nothing-->
+<!--    #         });-->
+<!--    #         return false;-->
+<!--    #       });-->
+<!--    #     });-->
+<!--    # </script>-->
     </body>
 </html>
     '''
