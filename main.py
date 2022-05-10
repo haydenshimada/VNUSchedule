@@ -27,7 +27,7 @@ def login():
     return render_template("index.html")
 
 
-@application.route("/loginFailed", methods=["POST", "GET"])
+@application.route("/loi-dang-nhap", methods=["POST", "GET"])
 def check_login():
     output = request.form.to_dict()
 
@@ -136,7 +136,7 @@ def credentials_to_dict(credentials):
             'scopes': credentials.scopes}
 
 
-@application.route("/timeTable", methods=["POST", "GET"])
+@application.route("/thoi-khoa-bieu", methods=["POST", "GET"])
 def login_successfully():
     header = '''
     <!DOCTYPE html>
@@ -163,10 +163,10 @@ def login_successfully():
             </form>
         </div>
     </section>
-    <button id="convert2Img" onclick="downloadTimeTable()">Save as Image</button>
+    <button id="convert2Img" onclick="downloadTimeTable()">Lưu hình ảnh</button>
     
     <form action="/authorize" method="post">
-        <button type="submit" id="convert2Cal">Save to<br>Google Calendar </button>
+        <button type="submit" id="convert2Cal">Lưu vào<br>Google Calendar </button>
     </form>
     <section>
         <div id="timeTable">'''
