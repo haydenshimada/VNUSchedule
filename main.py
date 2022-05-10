@@ -169,22 +169,20 @@ def login_successfully():
         <button type="submit" id="convert2Cal">Save to<br>Google Calendar </button>
     </form>
     <section>
-        <div id="timeTable">
-    '''
+        <div id="timeTable">'''
 
     content = '''
             <table>
                 <tr id="tableHeader">
-                <th id="sequenceNumber">Tiết</th>
-                <th id="timePeriod">Thời gian học</th>
-                <th>Thứ 2</th>
-                <th>Thứ 3</th>
-                <th>Thứ 4</th>
-                <th>Thứ 5</th>
-                <th>Thứ 6</th>
-                <th>Thứ 7</th>
-            </tr>
-    '''
+                    <th id="sequenceNumber">Tiết</th>
+                    <th id="timePeriod">Thời gian học</th>
+                    <th>Thứ 2</th>
+                    <th>Thứ 3</th>
+                    <th>Thứ 4</th>
+                    <th>Thứ 5</th>
+                    <th>Thứ 6</th>
+                    <th>Thứ 7</th>
+                </tr>'''
 
     # time_table_matrix = [["", "", "", "", "", ""],
     #                      ["", "", "", "", "", "Pháp luật và đạo đức nghề nghiệp trong CNTT"],
@@ -208,13 +206,14 @@ def login_successfully():
 
     is_fill = [([False] * len(time_table_matrix[0])) for _ in range(len(time_table_matrix))]
 
+    default_color = ['FF6363', 'FFAB76', 'FFFDA2', 'BAFFB4', '76E3FF', 'A275E3', 'F3D1F4', 'FFFDE1']
+    color_index = 0
     subject_list = []
     for i in range(len(time_table_matrix)):
         content += '''
-            <tr>
-                <td class="sequenceNumber">{no}</td>
-                <td class="timePeriod">{hour}h - {hour}h50</td>
-        '''.format(no=i + 1, hour=i + 7)
+                <tr>
+                    <td class="sequenceNumber">{no}</td>
+                    <td class="timePeriod">{hour}h - {hour}h50</td>'''.format(no=i + 1, hour=i + 7)
         for j in range(len(time_table_matrix[i])):
             subject = time_table_matrix[i][j]
             if not is_fill[i][j]:
@@ -224,13 +223,20 @@ def login_successfully():
                     while (check_below < len(time_table_matrix)) and (time_table_matrix[check_below][j] == subject):
                         is_fill[check_below][j] = True
                         check_below += 1
-                    content += '<td rowspan="{size}">{subject}</td>'.format(size=check_below - i, subject=subject)
+                    content += '''
+                    <td rowspan="{size}" style="background-color: #{color}">{subject}</td>'''.format(size=check_below - i, color=default_color[color_index], subject=subject)
                     is_fill[i][j] = True
+                    color_index = (color_index + 1) % len(default_color)
                 else:
-                    content += '<td></td>'
+                    content += '''
+                    <td></td>'''
                     is_fill[i][j] = True
-        content += "</tr>"
-    content += "</table> </div> </section>"
+        content += '''
+                </tr>'''
+    content += '''
+            </table> 
+        </div> 
+    </section>'''
     header += content
     header += '''
     
