@@ -93,6 +93,10 @@ td {
     height: 30px;
 }
 
+#emptySpace {
+    height: 60px;
+}
+
 #convert2Img, #convert2Cal {
     background-color: white;
     font-size: 16px;

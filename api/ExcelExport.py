@@ -26,7 +26,7 @@ class Subject:
     # Hàm để trả về dữ liệu cần thiết để điền vào file excel
     # Hàm này là để dễ dàng điền các dữ liệu liên quan đến môn học vào các ô của excel
     def return_data(self):
-        return self.name + "\n" + self.classCode + "\n" + self.where
+        return self.name + "<br>" + self.classCode + "<br>" + self.where
 
     def font_color_chose(self):
         extract = self.bg_color.strip('#')

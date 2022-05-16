@@ -235,6 +235,7 @@ def login_successfully():
                 </tr>'''
     content += '''
             </table> 
+            <div id='emptySpace'></div>
         </div> 
     </section>'''
     header += content
