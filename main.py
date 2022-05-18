@@ -26,6 +26,10 @@ def index():
 def login():
     return render_template("index.html")
 
+@application.route("/404")
+def not_found():
+    return render_template("404.html")
+
 
 @application.route("/loi-dang-nhap", methods=["POST", "GET"])
 def check_login():
@@ -33,17 +37,15 @@ def check_login():
 
     from api.LoginExtract import login
     global data
-    data, is_login = login(output["username"], output["password"])
-
-    # data = np.matrix(data)
-    # with open('sample.csv', 'w') as f:
-    #     mywriter = csv.writer(f, delimiter=',')
-    #     mywriter.writerows(data)
+    is_login, data = login(output["username"], output["password"])
 
     if is_login:
         return redirect(url_for('login_successfully'))
     else:
-        return render_template("loginFailed.html")
+        if data == 'Username or Password is incorrect!':
+            return render_template("loginFailed.html")
+        else:
+            return redirect(url_for('not_found'))
 
 
 # This variable specifies the name of a file that contains the OAuth 2.0
