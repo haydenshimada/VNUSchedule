@@ -26,9 +26,9 @@ def index():
 def login():
     return render_template("index.html")
 
-@application.route("/404")
-def not_found():
-    return render_template("404.html")
+@application.route("/error")
+def error():
+    return render_template("error.html")
 
 
 @application.route("/loi-dang-nhap", methods=["POST", "GET"])
@@ -45,7 +45,7 @@ def check_login():
         if data == 'Username or Password is incorrect!':
             return render_template("loginFailed.html")
         else:
-            return redirect(url_for('not_found'))
+            return redirect(url_for('error'))
 
 
 # This variable specifies the name of a file that contains the OAuth 2.0
