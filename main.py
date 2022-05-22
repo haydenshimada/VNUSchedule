@@ -78,7 +78,7 @@ def create_calendar_in_background():
     #              credentials in a persistent database instead.
     flask.session['credentials'] = credentials_to_dict(credentials)
 
-    return flask.redirect(flask.url_for('index'))
+    return flask.redirect('https://calendar.google.com/')
 
 
 @application.route('/authorize', methods=['GET', 'POST'])
@@ -167,7 +167,7 @@ def login_successfully():
     </section>
     <button id="convert2Img" onclick="downloadTimeTable()">Lưu hình ảnh</button>
     
-    <form action="/authorize" method="post">
+    <form action="/authorize" method="post" target="_blank">
         <button type="submit" id="convert2Cal">Lưu vào<br>Google Calendar </button>
     </form>
     <section>
