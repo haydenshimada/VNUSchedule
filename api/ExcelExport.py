@@ -28,6 +28,9 @@ class Subject:
     def return_data(self):
         return self.name + "<br>" + self.classCode + "<br>" + self.where
 
+    def __str__(self) -> str:
+        return f'{self.name}, {self.classCode}, {self.date}, {self.start}, {self.end}, {self.where}'
+
     def font_color_chose(self):
         extract = self.bg_color.strip('#')
         amount = len(extract)

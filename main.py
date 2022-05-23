@@ -1,6 +1,5 @@
 import os
 import flask
-from api.gg_api import event_body
 
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
@@ -71,14 +70,21 @@ def create_calendar_in_background():
     service = googleapiclient.discovery.build(
         API_SERVICE_NAME, API_VERSION, credentials=credentials)
 
-    event = service.events().insert(calendarId='primary', body=event_body).execute()
+    from api.calendar_event import event_list
+    link_to_calendar = ''
+    for event in event_list:
+        event_in_app = service.events().insert(calendarId='primary', body=event).execute()
+        if link_to_calendar == '':
+            link_to_calendar = event_in_app.get('htmlLink')
+            print('event created: ', link_to_calendar)
+
 
     # Save credentials back to session in case access token was refreshed.
     # ACTION ITEM: In a production app, you likely want to save these
     #              credentials in a persistent database instead.
     flask.session['credentials'] = credentials_to_dict(credentials)
 
-    return flask.redirect('https://calendar.google.com/')
+    return flask.redirect(link_to_calendar)
 
 
 @application.route('/authorize', methods=['GET', 'POST'])
@@ -204,7 +210,12 @@ def login_successfully():
 
     from api import ExcelExport
     from api.LoginExtract import table_extract
-    time_table_matrix = ExcelExport.html_table(table_extract(data))
+    extracted_data = table_extract(data)
+    time_table_matrix = ExcelExport.html_table(extracted_data)
+    
+    from api.calendar_event import create_event_list
+    create_event_list(extracted_data)
+
 
     is_fill = [([False] * len(time_table_matrix[0])) for _ in range(len(time_table_matrix))]
 
