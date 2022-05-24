@@ -14,6 +14,7 @@ application = Flask(__name__)
 application.secret_key = b'_5#y2L"F4Q871-rl38fuz\n\xec]/'
 
 data = []
+# is_login = False
 
 
 @application.route("/")
@@ -24,6 +25,7 @@ def index():
 @application.route("/dang-nhap")
 def login():
     return render_template("index.html")
+
 
 @application.route("/error")
 def error():
@@ -38,7 +40,7 @@ def check_login():
     global data
     is_login, data = login(output["username"], output["password"])
 
-    if is_login:
+    if is_login or data == "There's no currently enrolled subject!":
         return redirect(url_for('login_successfully'))
     else:
         if data == 'Username or Password is incorrect!':
@@ -77,7 +79,6 @@ def create_calendar_in_background():
         if link_to_calendar == '':
             link_to_calendar = event_in_app.get('htmlLink')
             print('event created: ', link_to_calendar)
-
 
     # Save credentials back to session in case access token was refreshed.
     # ACTION ITEM: In a production app, you likely want to save these
@@ -171,26 +172,13 @@ def login_successfully():
             </form>
         </div>
     </section>
-    <button id="convert2Img" onclick="downloadTimeTable()">Lưu hình ảnh</button>
+    <button id="convert2Img" onclick="downloadTimeTable()" "style="visibility: {img};">Lưu hình ảnh</button>
     
     <form action="/authorize" method="post" target="_blank">
-        <button type="submit" id="convert2Cal">Lưu vào<br>Google Calendar </button>
+        <button type="submit" id="convert2Cal" style="visibility: {cal};">Lưu vào<br>Google Calendar </button>
     </form>
     <section>
         <div id="timeTable">'''
-
-    content = '''
-            <table>
-                <tr id="tableHeader">
-                    <th id="sequenceNumber">Tiết</th>
-                    <th id="timePeriod">Thời gian học</th>
-                    <th>Thứ 2</th>
-                    <th>Thứ 3</th>
-                    <th>Thứ 4</th>
-                    <th>Thứ 5</th>
-                    <th>Thứ 6</th>
-                    <th>Thứ 7</th>
-                </tr>'''
 
     # time_table_matrix = [["", "", "", "", "", ""],
     #                      ["", "", "", "", "", "Pháp luật và đạo đức nghề nghiệp trong CNTT"],
@@ -208,49 +196,68 @@ def login_successfully():
     if not data:
         return redirect(url_for("index"))
 
-    from api import ExcelExport
-    from api.LoginExtract import table_extract
-    extracted_data = table_extract(data)
-    time_table_matrix = ExcelExport.html_table(extracted_data)
-    
-    from api.calendar_event import create_event_list
-    create_event_list(extracted_data)
+    if data == "There's no currently enrolled subject!":
+        content = '''
+            <p>Không tìm thấy môn học!</p>
+        '''
+    else:
+        from api import ExcelExport
+        from api.LoginExtract import table_extract
+        extracted_data = table_extract(data)
+        time_table_matrix = ExcelExport.html_table(extracted_data)
 
+        from api.calendar_event import create_event_list
+        create_event_list(extracted_data)
 
-    is_fill = [([False] * len(time_table_matrix[0])) for _ in range(len(time_table_matrix))]
+        is_fill = [([False] * len(time_table_matrix[0])) for _ in range(len(time_table_matrix))]
 
-    default_color = ['FF6363', 'FFAB76', 'FFFDA2', 'BAFFB4', '76E3FF', 'A275E3', 'F3D1F4', 'FFFDE1']
-    color_index = 0
-    subject_list = []
-    for i in range(len(time_table_matrix)):
-        content += '''
+        default_color = ['FF6363', 'FFAB76', 'FFFDA2', 'BAFFB4', '76E3FF', 'A275E3', 'F3D1F4', 'FFFDE1']
+        color_index = 0
+        subject_list = []
+        content = '''
+            <table>
+                <tr id="tableHeader">
+                    <th id="sequenceNumber">Tiết</th>
+                    <th id="timePeriod">Thời gian học</th>
+                    <th>Thứ 2</th>
+                    <th>Thứ 3</th>
+                    <th>Thứ 4</th>
+                    <th>Thứ 5</th>
+                    <th>Thứ 6</th>
+                    <th>Thứ 7</th>
+                </tr>'''
+        for i in range(len(time_table_matrix)):
+            content += '''
                 <tr>
                     <td class="sequenceNumber">{no}</td>
                     <td class="timePeriod">{hour}h - {hour}h50</td>'''.format(no=i + 1, hour=i + 7)
-        for j in range(len(time_table_matrix[i])):
-            subject = time_table_matrix[i][j]
-            if not is_fill[i][j]:
-                if subject != "" and subject not in subject_list:
-                    subject_list.append(subject)
-                    check_below = i + 1
-                    while (check_below < len(time_table_matrix)) and (time_table_matrix[check_below][j] == subject):
-                        is_fill[check_below][j] = True
-                        check_below += 1
-                    content += '''
-                    <td rowspan="{size}" style="background-color: #{color}">{subject}</td>'''.format(size=check_below - i, color=default_color[color_index], subject=subject)
-                    is_fill[i][j] = True
-                    color_index = (color_index + 1) % len(default_color)
-                else:
-                    content += '''
+            for j in range(len(time_table_matrix[i])):
+                subject = time_table_matrix[i][j]
+                if not is_fill[i][j]:
+                    if subject != "" and subject not in subject_list:
+                        subject_list.append(subject)
+                        check_below = i + 1
+                        while (check_below < len(time_table_matrix)) and (time_table_matrix[check_below][j] == subject):
+                            is_fill[check_below][j] = True
+                            check_below += 1
+                        content += '''
+                    <td rowspan="{size}" style="background-color: #{color}">{subject}</td>'''.format(
+                            size=check_below - i, color=default_color[color_index], subject=subject)
+                        is_fill[i][j] = True
+                        color_index = (color_index + 1) % len(default_color)
+                    else:
+                        content += '''
                     <td></td>'''
-                    is_fill[i][j] = True
-        content += '''
+                        is_fill[i][j] = True
+            content += '''
                 </tr>'''
-    content += '''
+        content += '''
             </table> 
-            <div id='emptySpace'></div>
+            <div id='emptySpace'></div>'''
+    content += '''
         </div> 
-    </section>'''
+    </section>
+    '''
     header += content
     header += '''
     
@@ -259,18 +266,6 @@ def login_successfully():
     <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
     <script src="{{ url_for('static', filename='javascript/mainPage.js') }}"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <!--    <script type=text/javascript>-->
-<!--    #     $(function() {-->
-<!--    #       $('#convert2Cal').on('click', function(e) {-->
-<!--    #         e.preventDefault()-->
-<!--    #         $.getJSON('/create_calendar_in_background',-->
-<!--    #             function(data) {-->
-<!--    #           //do nothing-->
-<!--    #         });-->
-<!--    #         return false;-->
-<!--    #       });-->
-<!--    #     });-->
-<!--    # </script>-->
     </body>
 </html>
     '''

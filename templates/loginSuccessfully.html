@@ -23,10 +23,10 @@
             </form>
         </div>
     </section>
-    <button id="convert2Img" onclick="downloadTimeTable()">Lưu hình ảnh</button>
+    <button id="convert2Img" onclick="downloadTimeTable()" "style="visibility: {img};">Lưu hình ảnh</button>
     
     <form action="/authorize" method="post" target="_blank">
-        <button type="submit" id="convert2Cal">Lưu vào<br>Google Calendar </button>
+        <button type="submit" id="convert2Cal" style="visibility: {cal};">Lưu vào<br>Google Calendar </button>
     </form>
     <section>
         <div id="timeTable">
@@ -49,12 +49,11 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td rowspan="5" style="background-color: #FF6363">Vật lý đại cương 2<br>EPN1096 50<br>307-GĐ2</td>
                 </tr>
                 <tr>
                     <td class="sequenceNumber">2</td>
                     <td class="timePeriod">8h - 8h50</td>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -69,7 +68,6 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
                 </tr>
                 <tr>
                     <td class="sequenceNumber">4</td>
@@ -79,12 +77,10 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
                 </tr>
                 <tr>
                     <td class="sequenceNumber">5</td>
                     <td class="timePeriod">11h - 11h50</td>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -105,16 +101,15 @@
                     <td class="sequenceNumber">7</td>
                     <td class="timePeriod">13h - 13h50</td>
                     <td></td>
-                    <td rowspan="5" style="background-color: #FF6363">Pháp luật và đạo đức nghề nghiệp trong CNTT<br>INT3514 52<br>108-GĐ3</td>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td rowspan="5" style="background-color: #FFAB76">Tư tưởng Hồ Chí Minh<br>POL1001 50<br>308-GĐ2</td>
+                    <td rowspan="5" style="background-color: #FFFDA2">Lịch sử Đảng Cộng sản Việt Nam<br>HIS1001 51<br>308-GĐ2</td>
                     <td></td>
                 </tr>
                 <tr>
                     <td class="sequenceNumber">8</td>
                     <td class="timePeriod">14h - 14h50</td>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -127,7 +122,6 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
                 </tr>
                 <tr>
                     <td class="sequenceNumber">10</td>
@@ -136,12 +130,10 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
                 </tr>
                 <tr>
                     <td class="sequenceNumber">11</td>
                     <td class="timePeriod">17h - 17h50</td>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -182,23 +174,12 @@
         </div> 
     </section>
     
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
     <script src="{{ url_for('static', filename='javascript/mainPage.js') }}"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <!--    <script type=text/javascript>-->
-<!--    #     $(function() {-->
-<!--    #       $('#convert2Cal').on('click', function(e) {-->
-<!--    #         e.preventDefault()-->
-<!--    #         $.getJSON('/create_calendar_in_background',-->
-<!--    #             function(data) {-->
-<!--    #           //do nothing-->
-<!--    #         });-->
-<!--    #         return false;-->
-<!--    #       });-->
-<!--    #     });-->
-<!--    # </script>-->
     </body>
 </html>
     

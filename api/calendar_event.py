@@ -2,6 +2,7 @@ from datetime import date, timedelta
 
 event_list = []
 
+
 # returns a list of events from a list of subjects
 def create_event_list(subject_list):
     for subject in subject_list:
@@ -17,7 +18,7 @@ def create_event_list(subject_list):
 
         # create an event from converted data
         event_body = {
-            "summary": title,	    # title of event
+            "summary": title,  # title of event
             "location": location,
             "description": description,
             "end": {

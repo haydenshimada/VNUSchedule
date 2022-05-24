@@ -58,6 +58,8 @@ def login(LoginName, Password):
     except requests.Timeout as error:
         return False, "Timeout, the website takes too long to respond"
     res = s.get('http://dangkyhoc.vnu.edu.vn/xuat-ket-qua-dang-ky-hoc/1')
+    if res.text.__contains__("Không tìm thấy môn học!"):
+        return False, "There's no currently enrolled subject!"
     return True, res
 
 
