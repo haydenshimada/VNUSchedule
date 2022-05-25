@@ -147,8 +147,13 @@ def credentials_to_dict(credentials):
 
 @application.route("/thoi-khoa-bieu", methods=["POST", "GET"])
 def login_successfully():
+    if not data:
+        return redirect(url_for("index"))
+
+    isTable = data != "There's no currently enrolled subject!"
+
     header = '''
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta name = "viewport" content="width=device-width, initial-scale=1.0">
@@ -171,12 +176,16 @@ def login_successfully():
                 <button type="submit" id="logout_button">Đăng xuất</button>
             </form>
         </div>
-    </section>
-    <button id="convert2Img" onclick="downloadTimeTable()" "style="visibility: {img};">Lưu hình ảnh</button>
+    </section>'''
+    if isTable:
+        header += '''
+    <button id="convert2Img" onclick="downloadTimeTable()">Lưu hình ảnh</button>
     
     <form action="/authorize" method="post" target="_blank">
-        <button type="submit" id="convert2Cal" style="visibility: {cal};">Lưu vào<br>Google Calendar </button>
-    </form>
+        <button type="submit" id="convert2Cal">Lưu vào<br>Google Calendar </button>
+    </form>'''
+
+    body = '''
     <section>
         <div id="timeTable">'''
 
@@ -193,10 +202,7 @@ def login_successfully():
     #                      ["", "", "Trí tuệ nhân tạo", "", "Mạng máy tính", ""],
     #                      ["", "", "Trí tuệ nhân tạo", "", "Mạng máy tính", ""]]
 
-    if not data:
-        return redirect(url_for("index"))
-
-    if data == "There's no currently enrolled subject!":
+    if not isTable:
         content = '''
             <p>Không tìm thấy môn học!</p>
         '''
@@ -258,7 +264,7 @@ def login_successfully():
         </div> 
     </section>
     '''
-    header += content
+    header += body + content
     header += '''
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.js"></script>

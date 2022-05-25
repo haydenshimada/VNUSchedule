@@ -60,6 +60,12 @@
     align-items: center;
 }
 
+#timeTable p {
+    font-size: 25px;
+    margin-top: 50px;
+    margin-left: 20px;
+}
+
 table {
     margin-top: 60px;
     margin-left: auto;
